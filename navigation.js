@@ -1,0 +1,5 @@
+(() => {
+ const paths={brain:'M12 4c-3-3-7 0-6 3-4 1-4 6-1 8-1 4 4 7 7 4V4Zm0 0c3-3 7 0 6 3 4 1 4 6 1 8 1 4-4 7-7 4M6 7l2 2M5 15l3-1M18 7l-2 2M19 15l-3-1',motion:'M7 3l3 7h4l3-7M12 10v7m0 0-5 5m5-5 5 5M12 3v2',life:'M7 3h13v18H7zM4 6h5M4 11h5M4 16h5M12 8h5M12 12h5M12 16h3',chat:'M4 4h16v12H9l-5 5V4Zm4 5h8m-8 3h5',results:'M4 14h3v7H4zM11 8h3v13h-3zM18 3h3v18h-3z',sound:'M3 9h4l5-5v16l-5-5H3V9Zm13-3c4 3 4 9 0 12m-1-8c1 1 1 3 0 4'};
+ window.portalIcon=name=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name]}"/></svg>`;
+ window.portalSections=[{id:'brain',title:'動動腦',color:'#007c73',url:'brain/index.html?embedded=1'},{id:'motion',title:'動動手',color:'#bb4814',url:'motion/index.html?embedded=1'},{id:'life',title:'生活紀錄',color:'#086fbe',url:'life/index.html?embedded=1'},{id:'chat',title:'聊天分享',color:'#b92e60',url:'chat/index.html?embedded=1'},{id:'results',title:'我的成果',color:'#6c49a3',url:'results.html?embedded=1#results'}];
+})();
