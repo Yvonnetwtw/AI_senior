@@ -1,0 +1,681 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>噴蚊子積木教學</title><style>body{margin:0;background:#f4f6f8;color:#18384a;font-family:"Microsoft JhengHei",sans-serif;font-size:22px;line-height:1.6}main{max-width:1280px;margin:auto;padding:28px}section{background:white;margin:26px 0;padding:30px;border:1px solid #d5dfe4;border-radius:14px}h1{font-size:38px}h2{color:#006e67;font-size:30px}h3{font-size:23px}.flow{display:flex;flex-wrap:wrap;gap:12px}.pill{background:#007a73;color:white;padding:12px;border-radius:8px}.stack{margin:10px 0 10px 22px}.block{border-left:8px solid #bc8c24;background:#fff1cd;padding:10px 15px;margin:7px 0;border-radius:5px;font-weight:600;overflow-wrap:anywhere}.set{border-color:#d2672a;background:#ffeadb}.component{border-color:#388479;background:#e0f2ee}.procedure{border-color:#79569b;background:#eee6f6}.branch{border-left:3px solid #b18d35;margin-left:20px;padding-left:12px}.note{background:#eaf3fb;padding:16px}.meta{font-size:16px;color:#596b75}table{width:100%;border-collapse:collapse;font-size:19px}td,th{border:1px solid #bbcbd3;padding:12px;text-align:left}summary{cursor:pointer}pre{white-space:pre-wrap;font-size:16px}a{color:#006b9a}@media print{section{break-inside:avoid}.meta{font-size:12px}}</style><main><h1>05 噴蚊子｜積木圖解</h1><p>先看流程，再對照原始事件；使用下方編號逐段講解。</p><div class="flow"><a class="pill" href="#s1">1 開始與停止</a><a class="pill" href="#s2">2 移動與噴霧</a><a class="pill" href="#s3">3 放開停止</a><a class="pill" href="#s4">4 泡泡與命中</a><a class="pill" href="#s5">5 恢復與聲音</a></div><section><h2>變數先看用途</h2><table><tr><th>變數</th><th>初始值</th><th>意思</th></tr><tr><td>score</td><td>0</td><td>命中加5，顯示分數</td></tr><tr><td>running</td><td>假</td><td>是否在遊戲中</td></tr><tr><td>spraying</td><td>假</td><td>是否按住噴霧罐</td></tr><tr><td>cooldown</td><td>0</td><td>命中後設10，以FoamClock事件逐次減1；不是秒數</td></tr><tr><td>stunned</td><td>假</td><td>蚊子是否受擊暫停；ReactionClock後恢復</td></tr></table></section><section class="lesson" id="s1"><h2>05｜1. 開始與停止</h2><p class="note">Button1是開始：分數歸零、蚊子恢復原圖、Speed=3、running為真；泡泡時鐘先關閉。</p><p class="meta">實際來源：AI05_MosquitoNativeV4.aia → Button1.Click；區塊ID mosquito4_13。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Button1.Click 發生</div><div class="branch"><small>執行</small><div class="block component">設定 ReactionClock.TimerEnabled 為 假</div><div class="block set">設定 stunned 為 假</div><div class="block component">設定 ball.Picture 為 mosquito.png</div><div class="block component">設定 ball.Speed 為 3</div><p class="meta">…後續積木見下方完整原始區段</p></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Button1&#x27;} {&#x27;component_type&#x27;: &#x27;Button&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Button1&#x27;, &#x27;event_name&#x27;: &#x27;Click&#x27;}
+  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ReactionClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ReactionClock&#x27;}
+    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global stunned&#x27;} {}
+      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+        text {&#x27;TEXT&#x27;: &#x27;mosquito.png&#x27;} {}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Speed&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Speed&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+          math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PauseButton&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;Button&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PauseButton&#x27;}
+            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global spraying&#x27;} {}
+              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;Clear&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global score&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                  procedures_callnoreturn {&#x27;PROCNAME&#x27;: &#x27;顯示分數&#x27;} {&#x27;name&#x27;: &#x27;顯示分數&#x27;}
+                    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;Clear&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                        math_division {} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;5&#x27;} {}
+                        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                          math_subtract {} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                            math_number {&#x27;NUM&#x27;: &#x27;85&#x27;} {}
+                          math_division {} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                            math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Heading&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Heading&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                            math_random_int {} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;210&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;330&#x27;} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Speed&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Speed&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                              math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;FoamClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;FoamClock&#x27;}
+                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}</pre></details></section><section class="lesson" id="s2"><h2>05｜2. 移動與噴霧</h2><p class="note">噴罐圖像精靈1可拖動；TouchDown只在running時啟用spraying與FoamClock，cooldown歸零。</p><p class="meta">實際來源：AI05_MosquitoNativeV4.aia → 圖像精靈1.TouchDown；區塊ID mosquito4_140。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 圖像精靈1.TouchDown 發生</div><div class="branch"><small>執行</small><div class="block ">如果 running</div><div class="branch"><small>執行</small><div class="block set">設定 spraying 為 真</div><div class="block set">設定 cooldown 為 0</div><div class="block component">設定 FoamClock.TimerEnabled 為 真</div></div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;, &#x27;event_name&#x27;: &#x27;TouchDown&#x27;}
+  controls_if {} {}
+    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global spraying&#x27;} {}
+      logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global cooldown&#x27;} {}
+        math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;FoamClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;FoamClock&#x27;}
+          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}</pre></details></section><section class="lesson" id="s3"><h2>05｜3. 放開停止</h2><p class="note">噴罐與畫布的TouchUp都要把spraying設假、關閉FoamClock並清除畫布上的泡泡。</p><p class="meta">實際來源：AI05_MosquitoNativeV4.aia → 畫布1.TouchUp；區塊ID mosquito4_155。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 畫布1.TouchUp 發生</div><div class="branch"><small>執行</small><div class="block set">設定 spraying 為 假</div><div class="block component">設定 FoamClock.TimerEnabled 為 假</div><div class="block component">呼叫 畫布1.Clear（）</div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;, &#x27;event_name&#x27;: &#x27;TouchUp&#x27;}
+  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global spraying&#x27;} {}
+    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;FoamClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;FoamClock&#x27;}
+      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;Clear&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}</pre></details></section><section class="lesson" id="s4"><h2>05｜4. 泡泡與命中</h2><p class="note">FoamClock畫泡泡只是視覺；命中另以蚊子與噴罐的座標區域判斷，還須stunned為假且cooldown=0。命中加5並換暈眩圖。</p><p class="meta">實際來源：AI05_MosquitoNativeV4.aia → FoamClock.Timer；區塊ID mosquito4_161。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 FoamClock.Timer 發生</div><div class="branch"><small>執行</small><div class="block ">如果 (running 且 spraying)</div><div class="branch"><small>執行</small><div class="block ">如果 (cooldown ＞ 0)</div><div class="branch"><small>執行</small><div class="block set">設定 cooldown 為 (cooldown − 1)</div></div><div class="block component">呼叫 畫布1.Clear（）</div><div class="block component">設定 畫布1.PaintColor 為 -1</div><div class="block component">呼叫 畫布1.DrawCircle（(圖像精靈1.X − 12), ((圖像精靈1.Y + 13) + 隨機整數(-4, 4)), 隨機整數(1, 3), 真）</div><p class="meta">…後續積木見下方完整原始區段</p></div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;FoamClock&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;FoamClock&#x27;, &#x27;event_name&#x27;: &#x27;Timer&#x27;}
+  controls_if {} {}
+    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global spraying&#x27;} {}
+    controls_if {} {}
+      math_compare {&#x27;OP&#x27;: &#x27;GT&#x27;} {}
+        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global cooldown&#x27;} {}
+        math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global cooldown&#x27;} {}
+        math_subtract {} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global cooldown&#x27;} {}
+          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;Clear&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;, &#x27;PROP&#x27;: &#x27;PaintColor&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;PaintColor&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+          math_number {&#x27;NUM&#x27;: &#x27;-1&#x27;} {}
+          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+            math_subtract {} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+              math_number {&#x27;NUM&#x27;: &#x27;12&#x27;} {}
+            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+              math_random_int {} {}
+                math_number {&#x27;NUM&#x27;: &#x27;-4&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+            math_random_int {} {}
+              math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+              math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+              math_subtract {} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                math_number {&#x27;NUM&#x27;: &#x27;27&#x27;} {}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                math_random_int {} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;-9&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;9&#x27;} {}
+              math_random_int {} {}
+                math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+              logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                math_subtract {} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;42&#x27;} {}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                    math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                  math_random_int {} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;-14&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;14&#x27;} {}
+                math_random_int {} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                  math_subtract {} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                    math_number {&#x27;NUM&#x27;: &#x27;57&#x27;} {}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                      math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                    math_random_int {} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;-19&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;19&#x27;} {}
+                  math_random_int {} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                    math_subtract {} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                      math_number {&#x27;NUM&#x27;: &#x27;72&#x27;} {}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                        math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                      math_random_int {} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;-24&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;24&#x27;} {}
+                    math_random_int {} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                    logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                      math_subtract {} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                        math_number {&#x27;NUM&#x27;: &#x27;87&#x27;} {}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                          math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                        math_random_int {} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;-29&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;29&#x27;} {}
+                      math_random_int {} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                      logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                        math_subtract {} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                          math_number {&#x27;NUM&#x27;: &#x27;102&#x27;} {}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                            math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                          math_random_int {} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;-34&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;34&#x27;} {}
+                        math_random_int {} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                        logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                          math_subtract {} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                            math_number {&#x27;NUM&#x27;: &#x27;117&#x27;} {}
+                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                              math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                            math_random_int {} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;-39&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;39&#x27;} {}
+                          math_random_int {} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                            math_subtract {} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                              math_number {&#x27;NUM&#x27;: &#x27;132&#x27;} {}
+                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                              math_random_int {} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;-44&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;44&#x27;} {}
+                            math_random_int {} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                              math_subtract {} {}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                math_number {&#x27;NUM&#x27;: &#x27;147&#x27;} {}
+                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                  math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                math_random_int {} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;-49&#x27;} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;49&#x27;} {}
+                              math_random_int {} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                              logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                math_subtract {} {}
+                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                  math_number {&#x27;NUM&#x27;: &#x27;162&#x27;} {}
+                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                    math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                  math_random_int {} {}
+                                    math_number {&#x27;NUM&#x27;: &#x27;-54&#x27;} {}
+                                    math_number {&#x27;NUM&#x27;: &#x27;54&#x27;} {}
+                                math_random_int {} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                  math_subtract {} {}
+                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                    math_number {&#x27;NUM&#x27;: &#x27;177&#x27;} {}
+                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                      math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                    math_random_int {} {}
+                                      math_number {&#x27;NUM&#x27;: &#x27;-59&#x27;} {}
+                                      math_number {&#x27;NUM&#x27;: &#x27;59&#x27;} {}
+                                  math_random_int {} {}
+                                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                    math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                    math_subtract {} {}
+                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                      math_number {&#x27;NUM&#x27;: &#x27;12&#x27;} {}
+                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                        math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                      math_random_int {} {}
+                                        math_number {&#x27;NUM&#x27;: &#x27;-4&#x27;} {}
+                                        math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                    math_random_int {} {}
+                                      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                      math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                      math_subtract {} {}
+                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                        math_number {&#x27;NUM&#x27;: &#x27;27&#x27;} {}
+                                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                          math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                        math_random_int {} {}
+                                          math_number {&#x27;NUM&#x27;: &#x27;-9&#x27;} {}
+                                          math_number {&#x27;NUM&#x27;: &#x27;9&#x27;} {}
+                                      math_random_int {} {}
+                                        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                        math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                      logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                        math_subtract {} {}
+                                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                          math_number {&#x27;NUM&#x27;: &#x27;42&#x27;} {}
+                                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                            math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                          math_random_int {} {}
+                                            math_number {&#x27;NUM&#x27;: &#x27;-14&#x27;} {}
+                                            math_number {&#x27;NUM&#x27;: &#x27;14&#x27;} {}
+                                        math_random_int {} {}
+                                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                          math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                        logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                          math_subtract {} {}
+                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                            math_number {&#x27;NUM&#x27;: &#x27;57&#x27;} {}
+                                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                              math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                            math_random_int {} {}
+                                              math_number {&#x27;NUM&#x27;: &#x27;-19&#x27;} {}
+                                              math_number {&#x27;NUM&#x27;: &#x27;19&#x27;} {}
+                                          math_random_int {} {}
+                                            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                            math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                            math_subtract {} {}
+                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                              math_number {&#x27;NUM&#x27;: &#x27;72&#x27;} {}
+                                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                              math_random_int {} {}
+                                                math_number {&#x27;NUM&#x27;: &#x27;-24&#x27;} {}
+                                                math_number {&#x27;NUM&#x27;: &#x27;24&#x27;} {}
+                                            math_random_int {} {}
+                                              math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                              math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                              math_subtract {} {}
+                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                math_number {&#x27;NUM&#x27;: &#x27;87&#x27;} {}
+                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                math_random_int {} {}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;-29&#x27;} {}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;29&#x27;} {}
+                                              math_random_int {} {}
+                                                math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                              logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                math_subtract {} {}
+                                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;102&#x27;} {}
+                                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                  math_random_int {} {}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;-34&#x27;} {}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;34&#x27;} {}
+                                                math_random_int {} {}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                  math_subtract {} {}
+                                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;117&#x27;} {}
+                                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                    math_random_int {} {}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;-39&#x27;} {}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;39&#x27;} {}
+                                                  math_random_int {} {}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                    math_subtract {} {}
+                                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;132&#x27;} {}
+                                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                      math_random_int {} {}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;-44&#x27;} {}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;44&#x27;} {}
+                                                    math_random_int {} {}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                      math_subtract {} {}
+                                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;147&#x27;} {}
+                                                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                        math_random_int {} {}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;-49&#x27;} {}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;49&#x27;} {}
+                                                      math_random_int {} {}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                      logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                        math_subtract {} {}
+                                                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;162&#x27;} {}
+                                                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                            math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                          math_random_int {} {}
+                                                            math_number {&#x27;NUM&#x27;: &#x27;-54&#x27;} {}
+                                                            math_number {&#x27;NUM&#x27;: &#x27;54&#x27;} {}
+                                                        math_random_int {} {}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                        logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                          math_subtract {} {}
+                                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                            math_number {&#x27;NUM&#x27;: &#x27;177&#x27;} {}
+                                                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                            math_random_int {} {}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;-59&#x27;} {}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;59&#x27;} {}
+                                                          math_random_int {} {}
+                                                            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                            math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                            math_subtract {} {}
+                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;12&#x27;} {}
+                                                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                              math_random_int {} {}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;-4&#x27;} {}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                                            math_random_int {} {}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                              math_subtract {} {}
+                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;27&#x27;} {}
+                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                math_random_int {} {}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;-9&#x27;} {}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;9&#x27;} {}
+                                                              math_random_int {} {}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                              logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                math_subtract {} {}
+                                                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;42&#x27;} {}
+                                                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                    math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                  math_random_int {} {}
+                                                                    math_number {&#x27;NUM&#x27;: &#x27;-14&#x27;} {}
+                                                                    math_number {&#x27;NUM&#x27;: &#x27;14&#x27;} {}
+                                                                math_random_int {} {}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                  math_subtract {} {}
+                                                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                    math_number {&#x27;NUM&#x27;: &#x27;57&#x27;} {}
+                                                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                    math_random_int {} {}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;-19&#x27;} {}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;19&#x27;} {}
+                                                                  math_random_int {} {}
+                                                                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                    math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                    math_subtract {} {}
+                                                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;72&#x27;} {}
+                                                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                        math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                      math_random_int {} {}
+                                                                        math_number {&#x27;NUM&#x27;: &#x27;-24&#x27;} {}
+                                                                        math_number {&#x27;NUM&#x27;: &#x27;24&#x27;} {}
+                                                                    math_random_int {} {}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                      math_subtract {} {}
+                                                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                        math_number {&#x27;NUM&#x27;: &#x27;87&#x27;} {}
+                                                                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                          math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                        math_random_int {} {}
+                                                                          math_number {&#x27;NUM&#x27;: &#x27;-29&#x27;} {}
+                                                                          math_number {&#x27;NUM&#x27;: &#x27;29&#x27;} {}
+                                                                      math_random_int {} {}
+                                                                        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                        math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                      logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                        math_subtract {} {}
+                                                                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                          math_number {&#x27;NUM&#x27;: &#x27;102&#x27;} {}
+                                                                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                            math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                          math_random_int {} {}
+                                                                            math_number {&#x27;NUM&#x27;: &#x27;-34&#x27;} {}
+                                                                            math_number {&#x27;NUM&#x27;: &#x27;34&#x27;} {}
+                                                                        math_random_int {} {}
+                                                                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                          math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                        logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                          math_subtract {} {}
+                                                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                            math_number {&#x27;NUM&#x27;: &#x27;117&#x27;} {}
+                                                                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                              math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                            math_random_int {} {}
+                                                                              math_number {&#x27;NUM&#x27;: &#x27;-39&#x27;} {}
+                                                                              math_number {&#x27;NUM&#x27;: &#x27;39&#x27;} {}
+                                                                          math_random_int {} {}
+                                                                            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                            math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                            math_subtract {} {}
+                                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                              math_number {&#x27;NUM&#x27;: &#x27;132&#x27;} {}
+                                                                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                              math_random_int {} {}
+                                                                                math_number {&#x27;NUM&#x27;: &#x27;-44&#x27;} {}
+                                                                                math_number {&#x27;NUM&#x27;: &#x27;44&#x27;} {}
+                                                                            math_random_int {} {}
+                                                                              math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                              math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                              math_subtract {} {}
+                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                math_number {&#x27;NUM&#x27;: &#x27;147&#x27;} {}
+                                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                  math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                                math_random_int {} {}
+                                                                                  math_number {&#x27;NUM&#x27;: &#x27;-49&#x27;} {}
+                                                                                  math_number {&#x27;NUM&#x27;: &#x27;49&#x27;} {}
+                                                                              math_random_int {} {}
+                                                                                math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                              logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                                math_subtract {} {}
+                                                                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                  math_number {&#x27;NUM&#x27;: &#x27;162&#x27;} {}
+                                                                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                    math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                                  math_random_int {} {}
+                                                                                    math_number {&#x27;NUM&#x27;: &#x27;-54&#x27;} {}
+                                                                                    math_number {&#x27;NUM&#x27;: &#x27;54&#x27;} {}
+                                                                                math_random_int {} {}
+                                                                                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                                  math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;method_name&#x27;: &#x27;DrawCircle&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                                                                                  math_subtract {} {}
+                                                                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                    math_number {&#x27;NUM&#x27;: &#x27;177&#x27;} {}
+                                                                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                      math_number {&#x27;NUM&#x27;: &#x27;13&#x27;} {}
+                                                                                    math_random_int {} {}
+                                                                                      math_number {&#x27;NUM&#x27;: &#x27;-59&#x27;} {}
+                                                                                      math_number {&#x27;NUM&#x27;: &#x27;59&#x27;} {}
+                                                                                  math_random_int {} {}
+                                                                                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                                                    math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                                  controls_if {} {}
+                                                                                    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                                                      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                                                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global stunned&#x27;} {}
+                                                                                        logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                                                                      logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                                                        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                                                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global cooldown&#x27;} {}
+                                                                                          math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                                                                        logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                                                          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                                                            math_compare {&#x27;OP&#x27;: &#x27;LT&#x27;} {}
+                                                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                                                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                            math_compare {&#x27;OP&#x27;: &#x27;GT&#x27;} {}
+                                                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                                                                                                math_number {&#x27;NUM&#x27;: &#x27;52&#x27;} {}
+                                                                                              math_subtract {} {}
+                                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                                math_number {&#x27;NUM&#x27;: &#x27;100&#x27;} {}
+                                                                                          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                                                            math_compare {&#x27;OP&#x27;: &#x27;LT&#x27;} {}
+                                                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                                                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                                math_number {&#x27;NUM&#x27;: &#x27;43&#x27;} {}
+                                                                                            math_compare {&#x27;OP&#x27;: &#x27;GT&#x27;} {}
+                                                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                                                                                                math_number {&#x27;NUM&#x27;: &#x27;52&#x27;} {}
+                                                                                              math_subtract {} {}
+                                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;圖像精靈1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;圖像精靈1&#x27;}
+                                                                                                math_number {&#x27;NUM&#x27;: &#x27;17&#x27;} {}
+                                                                                    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global cooldown&#x27;} {}
+                                                                                      math_number {&#x27;NUM&#x27;: &#x27;10&#x27;} {}
+                                                                                      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global score&#x27;} {}
+                                                                                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global score&#x27;} {}
+                                                                                          math_number {&#x27;NUM&#x27;: &#x27;5&#x27;} {}
+                                                                                        procedures_callnoreturn {&#x27;PROCNAME&#x27;: &#x27;顯示分數&#x27;} {&#x27;name&#x27;: &#x27;顯示分數&#x27;}
+                                                                                          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global stunned&#x27;} {}
+                                                                                            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                                                                                              text {&#x27;TEXT&#x27;: &#x27;mosquito_dizzy.png&#x27;} {}
+                                                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Speed&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Speed&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                                                                                                math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ReactionClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ReactionClock&#x27;}
+                                                                                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}</pre></details></section><section class="lesson" id="s5"><h2>05｜5. 恢復與聲音</h2><p class="note">ReactionClock解除stunned，恢復圖案與移動；ball.TouchDown播放TouchSound。Button2結束、PauseButton暫停／繼續。</p><p class="meta">實際來源：AI05_MosquitoNativeV4.aia → ReactionClock.Timer；區塊ID mosquito4_768。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 ReactionClock.Timer 發生</div><div class="branch"><small>執行</small><div class="block component">設定 ReactionClock.TimerEnabled 為 假</div><div class="block set">設定 stunned 為 假</div><div class="block component">設定 ball.Picture 為 mosquito.png</div><div class="block ">如果 running</div><div class="branch"><small>執行</small><div class="block component">設定 ball.Y 為 0</div><div class="block component">設定 ball.X 為 隨機整數(0, (畫布1.Width − 52))</div><div class="block component">設定 ball.Heading 為 隨機整數(210, 330)</div><div class="block component">設定 ball.Speed 為 3</div></div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ReactionClock&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ReactionClock&#x27;, &#x27;event_name&#x27;: &#x27;Timer&#x27;}
+  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ReactionClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ReactionClock&#x27;}
+    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global stunned&#x27;} {}
+      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+        text {&#x27;TEXT&#x27;: &#x27;mosquito.png&#x27;} {}
+        controls_if {} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+            math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+              math_random_int {} {}
+                math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                math_subtract {} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;畫布1&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;畫布1&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;52&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Heading&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Heading&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                math_random_int {} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;210&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;330&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;ball&#x27;, &#x27;PROP&#x27;: &#x27;Speed&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Speed&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;ball&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}</pre></details></section><section><h2>學生要補什麼？</h2><p>② 補圖像精靈1.TouchDown：running時spraying真、cooldown=0、FoamClock啟用。<br>③ 補圖像精靈1及畫布1兩個TouchUp：停止噴霧、關閉時計、清除泡泡。</p><p>必改：調整蚊子Speed=3的所有恢復／開始位置，避免受擊後又變回舊速度。</p><p>進階新增：在結束按鈕Button2加入Voice語音讀分數；原版沒有Voice元件，先於Designer新增TextToSpeech並命名Voice。</p><h3>驗收</h3><ul><li>未開始無泡泡且不計分</li><li>按住才噴、放開立即停止</li><li>命中才加5並換表情</li><li>泡泡本身不加分</li><li>受擊後恢復飛行</li><li>點蚊子有聲音</li><li>暫停／結束後不繼續噴</li></ul></section><p class="meta">依原始.aia內容製作。未完成手機測試。教師完成版與學生半成品分開使用。</p></main></html>

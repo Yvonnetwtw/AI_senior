@@ -1,0 +1,12 @@
+{
+  "title": "收衣服",
+  "html": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\04_曬衣收衣(from PingPong)\\App_教學\\04_收衣服_積木圖解.html",
+  "out": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\04_曬衣收衣(from PingPong)\\App_教學",
+  "aia": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\04_曬衣收衣(from PingPong)\\App_教學\\LaundryStudentV1.aia",
+  "holes": [
+    "laundry3_411",
+    "laundry3_408"
+  ],
+  "blocks": 534,
+  "source_sha256": "b83236eb317b0b941576b802a65184a3663f3d9e5ae0245fed04369dfce6aad2"
+}
