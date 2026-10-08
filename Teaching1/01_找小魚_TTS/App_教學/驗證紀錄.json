@@ -1,0 +1,12 @@
+{
+  "title": "找小魚",
+  "html": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\01_找小魚_TTS\\App_教學\\01_找小魚_積木圖解.html",
+  "out": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\01_找小魚_TTS\\App_教學",
+  "aia": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\01_找小魚_TTS\\App_教學\\FindFishStudentV1.aia",
+  "holes": [
+    "fv2_106",
+    "fv2_184"
+  ],
+  "blocks": 192,
+  "source_sha256": "33c3c944285a18999ebf94615f2e71e250133a30866b133fa8737d8f4f9964e3"
+}
