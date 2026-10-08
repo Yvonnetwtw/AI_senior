@@ -1,0 +1,12 @@
+iPhone測試用玉米圖片 v2
+每張小於9,500 bytes，保留低於10,000 bytes的餘裕。
+尺寸348×406，JPEG格式。原始PNG未修改。
+請上傳本資料夾的JPG，並將App Inventor圖片屬性與積木中的.png改為.jpg。
+檔案格式及容量已檢查，尚未在實體iPhone測試。
+
+c01.jpg	9375 bytes	9.38 KB
+c02.jpg	9373 bytes	9.37 KB
+c03.jpg	9394 bytes	9.39 KB
+c04.jpg	9449 bytes	9.45 KB
+c05.jpg	9341 bytes	9.34 KB
+c01_core.jpg	9471 bytes	9.47 KB
