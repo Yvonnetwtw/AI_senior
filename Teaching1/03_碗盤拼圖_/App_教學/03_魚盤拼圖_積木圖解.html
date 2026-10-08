@@ -1,0 +1,902 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>魚盤拼圖積木教學</title><style>body{margin:0;background:#f4f6f8;color:#18384a;font-family:"Microsoft JhengHei",sans-serif;font-size:22px;line-height:1.6}main{max-width:1280px;margin:auto;padding:28px}section{background:white;margin:26px 0;padding:30px;border:1px solid #d5dfe4;border-radius:14px}h1{font-size:38px}h2{color:#006e67;font-size:30px}h3{font-size:23px}.flow{display:flex;flex-wrap:wrap;gap:12px}.pill{background:#007a73;color:white;padding:12px;border-radius:8px}.stack{margin:10px 0 10px 22px}.block{border-left:8px solid #bc8c24;background:#fff1cd;padding:10px 15px;margin:7px 0;border-radius:5px;font-weight:600;overflow-wrap:anywhere}.set{border-color:#d2672a;background:#ffeadb}.component{border-color:#388479;background:#e0f2ee}.procedure{border-color:#79569b;background:#eee6f6}.branch{border-left:3px solid #b18d35;margin-left:20px;padding-left:12px}.note{background:#eaf3fb;padding:16px}.meta{font-size:16px;color:#596b75}table{width:100%;border-collapse:collapse;font-size:19px}td,th{border:1px solid #bbcbd3;padding:12px;text-align:left}summary{cursor:pointer}pre{white-space:pre-wrap;font-size:16px}a{color:#006b9a}@media print{section{break-inside:avoid}.meta{font-size:12px}}</style><main><h1>03 魚盤拼圖｜積木圖解</h1><p>先看流程，再對照原始事件；使用下方編號逐段講解。</p><div class="flow"><a class="pill" href="#s1">1 開始與底圖</a><a class="pill" href="#s2">2 選取碎片</a><a class="pill" href="#s3">3 拖曳碎片</a><a class="pill" href="#s4">4 放開吸附</a><a class="pill" href="#s5">5 查看提示與完成</a></div><section><h2>變數先看用途</h2><table><tr><th>變數</th><th>初始值</th><th>意思</th></tr><tr><td>active</td><td>-1</td><td>目前拖曳的碎片0～5；-1未選取</td></tr><tr><td>count</td><td>0</td><td>拼好數量，6片完成</td></tr><tr><td>ready</td><td>假</td><td>排版完成才為真，允許互動</td></tr><tr><td>placed0～5</td><td>假</td><td>每片是否已就位</td></tr><tr><td>scale</td><td>1</td><td>依畫布計算的圖片縮放比例；本堂先保留</td></tr></table></section><section class="lesson" id="s1"><h2>03｜1. 開始與底圖</h2><p class="note">開始程序開啟LayoutClock，計算scale、虛線底圖及六片位置，最後ready設真。</p><p class="meta">實際來源：AI03_FishPlatePuzzleV2.aia → Start.Click；區塊ID plate_259。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Start.Click 發生</div><div class="branch"><small>執行</small><div class="block procedure">呼叫 開始</div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Start&#x27;} {&#x27;component_type&#x27;: &#x27;Button&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Start&#x27;, &#x27;event_name&#x27;: &#x27;Click&#x27;}
+  procedures_callnoreturn {&#x27;PROCNAME&#x27;: &#x27;開始&#x27;} {&#x27;name&#x27;: &#x27;開始&#x27;}</pre></details></section><section class="lesson" id="s2"><h2>03｜2. 選取碎片</h2><p class="note">ready且placed1為假，將active設1、Piece1.Z設10，讓選中的碎片在上層。</p><p class="meta">實際來源：AI03_FishPlatePuzzleV2.aia → Piece1.TouchDown；區塊ID plate_329。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Piece1.TouchDown 發生</div><div class="branch"><small>執行</small><div class="block ">如果 (ready 且 (placed1 ＝ 假))</div><div class="branch"><small>執行</small><div class="block set">設定 active 為 1</div><div class="block component">設定 Piece1.Z 為 10</div></div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;, &#x27;event_name&#x27;: &#x27;TouchDown&#x27;}
+  controls_if {} {}
+    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global placed1&#x27;} {}
+        logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;Z&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Z&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+        math_number {&#x27;NUM&#x27;: &#x27;10&#x27;} {}</pre></details></section><section class="lesson" id="s3"><h2>03｜3. 拖曳碎片</h2><p class="note">依active選擇Piece0～5，按手指位移MoveTo，再MoveIntoBounds。</p><p class="meta">實際來源：AI03_FishPlatePuzzleV2.aia → Board.Dragged；區塊ID plate_384。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Board.Dragged 發生</div><div class="branch"><small>執行</small><div class="block ">如果 (active ＝ 0)</div><div class="branch"><small>執行</small><div class="block component">呼叫 Piece0.MoveTo（(Piece0.X + (currentX − prevX)), (Piece0.Y + (currentY − prevY))）</div><div class="block component">呼叫 Piece0.MoveIntoBounds（）</div></div><div class="block ">如果 (active ＝ 1)</div><div class="branch"><small>執行</small><div class="block component">呼叫 Piece1.MoveTo（(Piece1.X + (currentX − prevX)), (Piece1.Y + (currentY − prevY))）</div><div class="block component">呼叫 Piece1.MoveIntoBounds（）</div></div><div class="block ">如果 (active ＝ 2)</div><div class="branch"><small>執行</small><div class="block component">呼叫 Piece2.MoveTo（(Piece2.X + (currentX − prevX)), (Piece2.Y + (currentY − prevY))）</div><div class="block component">呼叫 Piece2.MoveIntoBounds（）</div></div><div class="block ">如果 (active ＝ 3)</div><div class="branch"><small>執行</small><div class="block component">呼叫 Piece3.MoveTo（(Piece3.X + (currentX − prevX)), (Piece3.Y + (currentY − prevY))）</div><div class="block component">呼叫 Piece3.MoveIntoBounds（）</div></div><p class="meta">…後續積木見下方完整原始區段</p></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;, &#x27;event_name&#x27;: &#x27;Dragged&#x27;}
+  controls_if {} {}
+    math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+      math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+        math_subtract {} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentX&#x27;} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevX&#x27;} {}
+      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+        math_subtract {} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentY&#x27;} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevY&#x27;} {}
+      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveIntoBounds&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+    controls_if {} {}
+      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+          math_subtract {} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentX&#x27;} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevX&#x27;} {}
+        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+          math_subtract {} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentY&#x27;} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevY&#x27;} {}
+        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveIntoBounds&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+      controls_if {} {}
+        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+            math_subtract {} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentX&#x27;} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevX&#x27;} {}
+          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+            math_subtract {} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentY&#x27;} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevY&#x27;} {}
+          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveIntoBounds&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+        controls_if {} {}
+          math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+            math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+              math_subtract {} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentX&#x27;} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevX&#x27;} {}
+            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+              math_subtract {} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentY&#x27;} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevY&#x27;} {}
+            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveIntoBounds&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+          controls_if {} {}
+            math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+              math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                math_subtract {} {}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentX&#x27;} {}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevX&#x27;} {}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                math_subtract {} {}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentY&#x27;} {}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevY&#x27;} {}
+              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveIntoBounds&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+            controls_if {} {}
+              math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;5&#x27;} {}
+              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                  math_subtract {} {}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentX&#x27;} {}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevX&#x27;} {}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                  math_subtract {} {}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentY&#x27;} {}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevY&#x27;} {}
+                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveIntoBounds&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}</pre></details></section><section class="lesson" id="s4"><h2>03｜4. 放開吸附</h2><p class="note">碎片左上角接近目標X、Y各26以內時吸附；placed設真、停用該片、count加1。否則返回起點。</p><p class="meta">實際來源：AI03_FishPlatePuzzleV2.aia → Board.TouchUp；區塊ID plate_481。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Board.TouchUp 發生</div><div class="branch"><small>執行</small><div class="block ">如果 (active ＝ 0)</div><div class="branch"><small>執行</small><div class="block component">設定 Piece0.Z 為 2</div><div class="block ">如果 (((Piece0.X ≥ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 1)) − 26)) 且 (Piece0.X ≤ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 1)) + 26))) 且 ((Piece0.Y ≥ (((Board.Height × 0.035) + (scale × 24)) − 26)) 且 (Piece0.Y ≤ (((Board.Height × 0.035) + (scale × 24)) + 26))))</div><div class="branch"><small>執行</small><div class="block set">設定 placed0 為 真</div><div class="block component">設定 Piece0.Enabled 為 假</div><div class="block component">呼叫 Piece0.MoveTo（(((Board.Width − (scale × 900)) ÷ 2) + (scale × 1)), ((Board.Height × 0.035) + (scale × 24))）</div><div class="block set">設定 count 為 (count + 1)</div><p class="meta">…後續積木見下方完整原始區段</p></div><div class="branch"><small>否則</small><div class="block component">呼叫 Piece0.MoveTo（((Board.Width × 0.75) − (scale × 161.5)), ((Board.Height × 0.6849999999999999) − (scale × 134.0))）</div><div class="block component">設定 Feedback.Text 為 看看花紋和盤緣，再試一次</div></div></div><div class="block ">如果 (active ＝ 1)</div><div class="branch"><small>執行</small><div class="block component">設定 Piece1.Z 為 2</div><div class="block ">如果 (((Piece1.X ≥ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 261)) − 26)) 且 (Piece1.X ≤ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 261)) + 26))) 且 ((Piece1.Y ≥ (((Board.Height × 0.035) + (scale × 0)) − 26)) 且 (Piece1.Y ≤ (((Board.Height × 0.035) + (scale × 0)) + 26))))</div><div class="branch"><small>執行</small><div class="block set">設定 placed1 為 真</div><div class="block component">設定 Piece1.Enabled 為 假</div><div class="block component">呼叫 Piece1.MoveTo（(((Board.Width − (scale × 900)) ÷ 2) + (scale × 261)), ((Board.Height × 0.035) + (scale × 0))）</div><div class="block set">設定 count 為 (count + 1)</div><p class="meta">…後續積木見下方完整原始區段</p></div><div class="branch"><small>否則</small><div class="block component">呼叫 Piece1.MoveTo（((Board.Width × 0.25) − (scale × 180.0)), ((Board.Height × 0.48) − (scale × 148.5))）</div><div class="block component">設定 Feedback.Text 為 看看花紋和盤緣，再試一次</div></div></div><div class="block ">如果 (active ＝ 2)</div><div class="branch"><small>執行</small><div class="block component">設定 Piece2.Z 為 2</div><div class="block ">如果 (((Piece2.X ≥ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 531)) − 26)) 且 (Piece2.X ≤ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 531)) + 26))) 且 ((Piece2.Y ≥ (((Board.Height × 0.035) + (scale × 18)) − 26)) 且 (Piece2.Y ≤ (((Board.Height × 0.035) + (scale × 18)) + 26))))</div><div class="branch"><small>執行</small><div class="block set">設定 placed2 為 真</div><div class="block component">設定 Piece2.Enabled 為 假</div><div class="block component">呼叫 Piece2.MoveTo（(((Board.Width − (scale × 900)) ÷ 2) + (scale × 531)), ((Board.Height × 0.035) + (scale × 18))）</div><div class="block set">設定 count 為 (count + 1)</div><p class="meta">…後續積木見下方完整原始區段</p></div><div class="branch"><small>否則</small><div class="block component">呼叫 Piece2.MoveTo（((Board.Width × 0.75) − (scale × 184.5)), ((Board.Height × 0.8899999999999999) − (scale × 149.5))）</div><div class="block component">設定 Feedback.Text 為 看看花紋和盤緣，再試一次</div></div></div><div class="block ">如果 (active ＝ 3)</div><div class="branch"><small>執行</small><div class="block component">設定 Piece3.Z 為 2</div><div class="block ">如果 (((Piece3.X ≥ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 1)) − 26)) 且 (Piece3.X ≤ ((((Board.Width − (scale × 900)) ÷ 2) + (scale × 1)) + 26))) 且 ((Piece3.Y ≥ (((Board.Height × 0.035) + (scale × 221)) − 26)) 且 (Piece3.Y ≤ (((Board.Height × 0.035) + (scale × 221)) + 26))))</div><div class="branch"><small>執行</small><div class="block set">設定 placed3 為 真</div><div class="block component">設定 Piece3.Enabled 為 假</div><div class="block component">呼叫 Piece3.MoveTo（(((Board.Width − (scale × 900)) ÷ 2) + (scale × 1)), ((Board.Height × 0.035) + (scale × 221))）</div><div class="block set">設定 count 為 (count + 1)</div><p class="meta">…後續積木見下方完整原始區段</p></div><div class="branch"><small>否則</small><div class="block component">呼叫 Piece3.MoveTo（((Board.Width × 0.25) − (scale × 175.0)), ((Board.Height × 0.6849999999999999) − (scale × 169.0))）</div><div class="block component">設定 Feedback.Text 為 看看花紋和盤緣，再試一次</div></div></div><p class="meta">…後續積木見下方完整原始區段</p></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;, &#x27;event_name&#x27;: &#x27;TouchUp&#x27;}
+  controls_if {} {}
+    math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+      math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;Z&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Z&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+      math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+      controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+        logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+            math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+              math_subtract {} {}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_division {} {}
+                    math_subtract {} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+            math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_division {} {}
+                    math_subtract {} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+            math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+              math_subtract {} {}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                    math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;24&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+            math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                    math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;24&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global placed0&#x27;} {}
+          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+            logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                math_division {} {}
+                  math_subtract {} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;24&#x27;} {}
+              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Progress&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Progress&#x27;}
+                  text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    text {&#x27;TEXT&#x27;: &#x27;已拼好 &#x27;} {}
+                    text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                      text {&#x27;TEXT&#x27;: &#x27; / 6&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                    text {&#x27;TEXT&#x27;: &#x27;拼對了！繼續找下一片&#x27;} {}
+                    controls_if {} {}
+                      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;6&#x27;} {}
+                      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+                        logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+                          logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+                            logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PreviewPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PreviewPanel&#x27;}
+                              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Voice&#x27;} {&#x27;component_type&#x27;: &#x27;TextToSpeech&#x27;, &#x27;method_name&#x27;: &#x27;Speak&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Voice&#x27;}
+                                  text {&#x27;TEXT&#x27;: &#x27;完成了！魚盤拼好了。&#x27;} {}
+        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece0&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece0&#x27;}
+          math_subtract {} {}
+            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+              math_number {&#x27;NUM&#x27;: &#x27;0.75&#x27;} {}
+            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+              math_number {&#x27;NUM&#x27;: &#x27;161.5&#x27;} {}
+          math_subtract {} {}
+            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+              math_number {&#x27;NUM&#x27;: &#x27;0.6849999999999999&#x27;} {}
+            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+              math_number {&#x27;NUM&#x27;: &#x27;134.0&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+            text {&#x27;TEXT&#x27;: &#x27;看看花紋和盤緣，再試一次&#x27;} {}
+    controls_if {} {}
+      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;Z&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Z&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+        math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+        controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+            logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+              math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+                math_subtract {} {}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_division {} {}
+                      math_subtract {} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;261&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+              math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_division {} {}
+                      math_subtract {} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;261&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+            logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+              math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+                math_subtract {} {}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+              math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global placed1&#x27;} {}
+            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_division {} {}
+                    math_subtract {} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;261&#x27;} {}
+                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                    math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Progress&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Progress&#x27;}
+                    text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      text {&#x27;TEXT&#x27;: &#x27;已拼好 &#x27;} {}
+                      text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                        text {&#x27;TEXT&#x27;: &#x27; / 6&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                      text {&#x27;TEXT&#x27;: &#x27;拼對了！繼續找下一片&#x27;} {}
+                      controls_if {} {}
+                        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;6&#x27;} {}
+                        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+                          logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+                            logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+                              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PreviewPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PreviewPanel&#x27;}
+                                logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Voice&#x27;} {&#x27;component_type&#x27;: &#x27;TextToSpeech&#x27;, &#x27;method_name&#x27;: &#x27;Speak&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Voice&#x27;}
+                                    text {&#x27;TEXT&#x27;: &#x27;完成了！魚盤拼好了。&#x27;} {}
+          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece1&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece1&#x27;}
+            math_subtract {} {}
+              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                math_number {&#x27;NUM&#x27;: &#x27;0.25&#x27;} {}
+              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;180.0&#x27;} {}
+            math_subtract {} {}
+              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                math_number {&#x27;NUM&#x27;: &#x27;0.48&#x27;} {}
+              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;148.5&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+              text {&#x27;TEXT&#x27;: &#x27;看看花紋和盤緣，再試一次&#x27;} {}
+      controls_if {} {}
+        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;Z&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Z&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+          controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+            logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+              logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+                  math_subtract {} {}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_division {} {}
+                        math_subtract {} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;531&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_division {} {}
+                        math_subtract {} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;531&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+              logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+                  math_subtract {} {}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;18&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;18&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global placed2&#x27;} {}
+              logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+                logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_division {} {}
+                      math_subtract {} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;531&#x27;} {}
+                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;18&#x27;} {}
+                  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Progress&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Progress&#x27;}
+                      text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        text {&#x27;TEXT&#x27;: &#x27;已拼好 &#x27;} {}
+                        text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                          text {&#x27;TEXT&#x27;: &#x27; / 6&#x27;} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                        text {&#x27;TEXT&#x27;: &#x27;拼對了！繼續找下一片&#x27;} {}
+                        controls_if {} {}
+                          math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;6&#x27;} {}
+                          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+                            logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+                              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+                                logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PreviewPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PreviewPanel&#x27;}
+                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Voice&#x27;} {&#x27;component_type&#x27;: &#x27;TextToSpeech&#x27;, &#x27;method_name&#x27;: &#x27;Speak&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Voice&#x27;}
+                                      text {&#x27;TEXT&#x27;: &#x27;完成了！魚盤拼好了。&#x27;} {}
+            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece2&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece2&#x27;}
+              math_subtract {} {}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;0.75&#x27;} {}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;184.5&#x27;} {}
+              math_subtract {} {}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;0.8899999999999999&#x27;} {}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;149.5&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                text {&#x27;TEXT&#x27;: &#x27;看看花紋和盤緣，再試一次&#x27;} {}
+        controls_if {} {}
+          math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+            math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;Z&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Z&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+            math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+            controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+              logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                  math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+                    math_subtract {} {}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_division {} {}
+                          math_subtract {} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                  math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_division {} {}
+                          math_subtract {} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                  math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+                    math_subtract {} {}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                          math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;221&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                  math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                          math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;221&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global placed3&#x27;} {}
+                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+                  logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_division {} {}
+                        math_subtract {} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;221&#x27;} {}
+                    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Progress&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Progress&#x27;}
+                        text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          text {&#x27;TEXT&#x27;: &#x27;已拼好 &#x27;} {}
+                          text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                            text {&#x27;TEXT&#x27;: &#x27; / 6&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                          text {&#x27;TEXT&#x27;: &#x27;拼對了！繼續找下一片&#x27;} {}
+                          controls_if {} {}
+                            math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;6&#x27;} {}
+                            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+                              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+                                logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PreviewPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PreviewPanel&#x27;}
+                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                                      logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Voice&#x27;} {&#x27;component_type&#x27;: &#x27;TextToSpeech&#x27;, &#x27;method_name&#x27;: &#x27;Speak&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Voice&#x27;}
+                                        text {&#x27;TEXT&#x27;: &#x27;完成了！魚盤拼好了。&#x27;} {}
+              component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece3&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece3&#x27;}
+                math_subtract {} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                    math_number {&#x27;NUM&#x27;: &#x27;0.25&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;175.0&#x27;} {}
+                math_subtract {} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                    math_number {&#x27;NUM&#x27;: &#x27;0.6849999999999999&#x27;} {}
+                  math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;169.0&#x27;} {}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                  text {&#x27;TEXT&#x27;: &#x27;看看花紋和盤緣，再試一次&#x27;} {}
+          controls_if {} {}
+            math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+              math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;Z&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Z&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+              math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+              controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+                logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                  logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                    math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                      math_subtract {} {}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_division {} {}
+                            math_subtract {} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;280&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                    math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_division {} {}
+                            math_subtract {} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;280&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                  logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                    math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                      math_subtract {} {}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                            math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;249&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                    math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                            math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;249&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global placed4&#x27;} {}
+                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                    component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_division {} {}
+                          math_subtract {} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;280&#x27;} {}
+                      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                          math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;249&#x27;} {}
+                      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Progress&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Progress&#x27;}
+                          text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            text {&#x27;TEXT&#x27;: &#x27;已拼好 &#x27;} {}
+                            text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                              text {&#x27;TEXT&#x27;: &#x27; / 6&#x27;} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                            text {&#x27;TEXT&#x27;: &#x27;拼對了！繼續找下一片&#x27;} {}
+                            controls_if {} {}
+                              math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;6&#x27;} {}
+                              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+                                logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PreviewPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PreviewPanel&#x27;}
+                                      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                                        logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Voice&#x27;} {&#x27;component_type&#x27;: &#x27;TextToSpeech&#x27;, &#x27;method_name&#x27;: &#x27;Speak&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Voice&#x27;}
+                                          text {&#x27;TEXT&#x27;: &#x27;完成了！魚盤拼好了。&#x27;} {}
+                component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece4&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece4&#x27;}
+                  math_subtract {} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_number {&#x27;NUM&#x27;: &#x27;0.75&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;184.0&#x27;} {}
+                  math_subtract {} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                      math_number {&#x27;NUM&#x27;: &#x27;0.48&#x27;} {}
+                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;158.0&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                    text {&#x27;TEXT&#x27;: &#x27;看看花紋和盤緣，再試一次&#x27;} {}
+            controls_if {} {}
+              math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;5&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;Z&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Z&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+                  logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                      math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                        math_subtract {} {}
+                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            math_division {} {}
+                              math_subtract {} {}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;559&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                      math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            math_division {} {}
+                              math_subtract {} {}
+                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;559&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                      math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                        math_subtract {} {}
+                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                              math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;260&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                      math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                              math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                            math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;260&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;26&#x27;} {}
+                  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global placed5&#x27;} {}
+                    logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;, &#x27;PROP&#x27;: &#x27;Enabled&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Enabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                      component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_division {} {}
+                            math_subtract {} {}
+                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;900&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;559&#x27;} {}
+                        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                            math_number {&#x27;NUM&#x27;: &#x27;0.035&#x27;} {}
+                          math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;260&#x27;} {}
+                        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Progress&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Progress&#x27;}
+                            text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                              text {&#x27;TEXT&#x27;: &#x27;已拼好 &#x27;} {}
+                              text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                                text {&#x27;TEXT&#x27;: &#x27; / 6&#x27;} {}
+                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                              text {&#x27;TEXT&#x27;: &#x27;拼對了！繼續找下一片&#x27;} {}
+                              controls_if {} {}
+                                math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;6&#x27;} {}
+                                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+                                    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+                                      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PreviewPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PreviewPanel&#x27;}
+                                        logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                                          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Voice&#x27;} {&#x27;component_type&#x27;: &#x27;TextToSpeech&#x27;, &#x27;method_name&#x27;: &#x27;Speak&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Voice&#x27;}
+                                            text {&#x27;TEXT&#x27;: &#x27;完成了！魚盤拼好了。&#x27;} {}
+                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Piece5&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Piece5&#x27;}
+                    math_subtract {} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_number {&#x27;NUM&#x27;: &#x27;0.25&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;169.0&#x27;} {}
+                    math_subtract {} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                        math_number {&#x27;NUM&#x27;: &#x27;0.8899999999999999&#x27;} {}
+                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global scale&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;142.5&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+                      text {&#x27;TEXT&#x27;: &#x27;看看花紋和盤緣，再試一次&#x27;} {}
+              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;-1&#x27;} {}</pre></details></section><section class="lesson" id="s5"><h2>03｜5. 查看提示與完成</h2><p class="note">Hint顯示完整盤面，Return回遊戲且不清除進度；6片完成後停用ready並顯示成果。</p><p class="meta">實際來源：AI03_FishPlatePuzzleV2.aia → Hint.Click；區塊ID plate_293。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Hint.Click 發生</div><div class="branch"><small>執行</small><div class="block ">如果 ready</div><div class="branch"><small>執行</small><div class="block set">設定 active 為 -1</div><div class="block component">設定 StartPanel.Visible 為 假</div><div class="block component">設定 GamePanel.Visible 為 假</div><div class="block component">設定 PreviewPanel.Visible 為 真</div><p class="meta">…後續積木見下方完整原始區段</p></div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Hint&#x27;} {&#x27;component_type&#x27;: &#x27;Button&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Hint&#x27;, &#x27;event_name&#x27;: &#x27;Click&#x27;}
+  controls_if {} {}
+    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global ready&#x27;} {}
+    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global active&#x27;} {}
+      math_number {&#x27;NUM&#x27;: &#x27;-1&#x27;} {}
+      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+        logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+          logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;PreviewPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;PreviewPanel&#x27;}
+            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}</pre></details></section><section><h2>學生要補什麼？</h2><p>② 仿Piece0.TouchDown補Piece1.TouchDown，正確使用placed1、active=1與Piece1.Z。<br>⑤ 補Return.Click：只回到GamePanel，不呼叫開始，不重設count。</p><p>必改：把吸附容許距離26調整為另一數值；六片的X與Y上下界一致修改，試玩比較。</p><p>進階新增：在Hint.Click加入一段語音，提示先看魚身花紋和盤緣。</p><h3>驗收</h3><ul><li>等待排版後才可選片</li><li>Piece1可拖且不被其他片遮住</li><li>接近虛線位置可吸附</li><li>已拼好的片不重複計數</li><li>查看提示再返回保留進度</li><li>6片完成後可重玩</li></ul></section><p class="meta">依原始.aia內容製作。未完成手機測試。教師完成版與學生半成品分開使用。</p></main></html>

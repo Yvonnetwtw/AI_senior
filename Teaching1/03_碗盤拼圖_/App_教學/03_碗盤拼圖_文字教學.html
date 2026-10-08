@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 碗盤拼圖 文字教學</title><style>body{margin:0;background:#fffdf7;color:#18384a;font:22px/1.8 "Microsoft JhengHei",sans-serif}main{max-width:1080px;margin:auto;padding:30px}section{background:white;border:1px solid #cbd8d5;border-radius:12px;padding:24px;margin:24px 0}h2{color:#00786e}.event,.task{background:#eef6f3;padding:12px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbc9c7;padding:12px;text-align:left}a{color:#00786e}pre{white-space:pre-wrap;font:inherit}</style><main><h1>03 碗盤拼圖｜文字版程式教學</h1><p>開始 → 選取 → 拖曳 → 放開判斷 → 六片完成</p><p>依現有教師版教學指引整理。這版使用文字說明，不使用難以辨識的積木截圖。</p><section><h2>1．開始與重新排列</h2><p class="event">對應積木：Start.Click／Again.Click → 開始程序 → LayoutClock.Timer</p><p>按開始或再玩一次，重設拼好數量及每片狀態，依畫布大小排列六片拼圖。排版完成後ready才設為真，允許選取。</p><p class="task">觀察：按再玩一次，六片回到起點，完成數回到0。</p></section><section><h2>2．按住碎片：記住選的是誰</h2><p class="event">對應積木：Piece0～Piece5.TouchDown</p><p>先檢查ready為真，而且該片placed為假。以Piece1為例：active設1，Piece1.Z設10，讓它顯示在其他碎片上方。active只是選取編號，這時不加分。</p><p class="task">學生補做：參考Piece0，把模板中Piece1.TouchDown補完整。</p></section><section><h2>3．拖曳：碎片跟著手指移動</h2><p class="event">對應積木：Board.Dragged</p><p>依active選出要移動的碎片。新X等於碎片原X加上手指本次水平位移；Y也一樣。MoveIntoBounds限制碎片留在畫布內。</p><p class="task">觀察：只移動選取的碎片；拖曳途中count不增加。</p></section><section><h2>4．放開：接近目標就吸附</h2><p class="event">對應積木：Board.TouchUp</p><p>以碎片左上角位置與該片目標座標比較，X、Y都在目標前後26的範圍內才算成功。成功時移到正確位置、placed設真、停用該片、count加1；放錯則回到原起點。事件結束時active設−1。</p><p class="task">學生修改：調整吸附範圍，六片的X、Y判斷一致修改，再比較是否比較容易操作。</p></section><section><h2>5．查看提示，再回到遊戲</h2><p class="event">對應積木：Hint.Click／Return.Click</p><p>Hint顯示完整魚盤供對照；Return只切回GamePanel，保留已拼好的進度。不要在Return呼叫開始程序，否則會重新開始。</p><p class="task">學生補做：補上Return.Click的畫面切換，驗證看提示再返回時count不變。</p></section><section><h2>6．六片完成與重玩</h2><p class="event">對應積木：Board.TouchUp中的完成判斷／Again.Click</p><p>每次成功放好後檢查count是否等於6。全部完成後將ready設假，切到成果畫面；再玩一次呼叫開始程序，重新初始化。</p><p class="task">觀察：同一片不重複計數；六片才完成；重玩能恢復操作。</p></section><section><h2>變數對照</h2><table><tr><th>變數</th><th>初始值</th><th>用途</th></tr><tr><td>active</td><td>−1</td><td>目前選取的碎片；0～5對應六片，−1表示未選取。</td></tr><tr><td>count</td><td>0</td><td>已拼好幾片；到6片完成。</td></tr><tr><td>ready</td><td>假</td><td>排版準備完成才允許互動；完成遊戲後關閉。</td></tr><tr><td>placed0～placed5</td><td>假</td><td>分別記錄每片是否已放好，避免重複操作。</td></tr><tr><td>scale</td><td>1</td><td>配合畫布大小計算拼圖尺寸與位置，本堂先保留。</td></tr></table></section><section><h2>模板、修改與課堂引導</h2><pre>PuzzleStudentV1.aia
+先完成：Piece1.TouchDown與Return.Click兩個空缺。
+再修改：吸附容許範圍並測試。
+核心完成後再加：查看提示時播放一句魚身花紋與盤緣的語音提示。
+
+教師引導（ARCS）
+A：示範一次放錯、一次吸附，請學生指出差別。
+R：討論虛線與吸附如何協助不易精準拖曳的使用者。
+C：先補選取，再補提示返回；每補一段立刻試玩。
+S：展示自己的修改，說明修改前後差別。
+
+課後反思
+1. 這次我學會了什麼？
+2. 哪一段還不懂，或還不能正常運作？
+3. 我還想進一步了解什麼？
+
+本次只更新教學文件，沒有修改或重新實測APP。
+</pre><p><a href="PuzzleStudentV1.aia">下載學生模板</a>　<a href="03_碗盤拼圖_文字教學.txt">下載純文字教材</a></p></section></main></html>

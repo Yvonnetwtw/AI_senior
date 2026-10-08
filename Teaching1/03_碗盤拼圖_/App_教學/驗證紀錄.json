@@ -1,0 +1,12 @@
+{
+  "title": "魚盤拼圖",
+  "html": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\03_碗盤拼圖_\\App_教學\\03_魚盤拼圖_積木圖解.html",
+  "out": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\03_碗盤拼圖_\\App_教學",
+  "aia": "C:\\Users\\ching\\OneDrive\\1-CNU\\0-各計劃\\1-115-1-MOE雨林_AI與銀髮族互動應用\\01_第一階段_動動腦_\\03_碗盤拼圖_\\App_教學\\PuzzleStudentV1.aia",
+  "holes": [
+    "plate_329",
+    "plate_306"
+  ],
+  "blocks": 1264,
+  "source_sha256": "c8bb30b1f02e79f218a0fb14868bc2c32b8015d6e6c6ea3749308e1021201c55"
+}
