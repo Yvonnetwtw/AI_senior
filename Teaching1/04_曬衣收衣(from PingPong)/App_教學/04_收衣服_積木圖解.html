@@ -1,0 +1,408 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>收衣服積木教學</title><style>body{margin:0;background:#f4f6f8;color:#18384a;font-family:"Microsoft JhengHei",sans-serif;font-size:22px;line-height:1.6}main{max-width:1280px;margin:auto;padding:28px}section{background:white;margin:26px 0;padding:30px;border:1px solid #d5dfe4;border-radius:14px}h1{font-size:38px}h2{color:#006e67;font-size:30px}h3{font-size:23px}.flow{display:flex;flex-wrap:wrap;gap:12px}.pill{background:#007a73;color:white;padding:12px;border-radius:8px}.stack{margin:10px 0 10px 22px}.block{border-left:8px solid #bc8c24;background:#fff1cd;padding:10px 15px;margin:7px 0;border-radius:5px;font-weight:600;overflow-wrap:anywhere}.set{border-color:#d2672a;background:#ffeadb}.component{border-color:#388479;background:#e0f2ee}.procedure{border-color:#79569b;background:#eee6f6}.branch{border-left:3px solid #b18d35;margin-left:20px;padding-left:12px}.note{background:#eaf3fb;padding:16px}.meta{font-size:16px;color:#596b75}table{width:100%;border-collapse:collapse;font-size:19px}td,th{border:1px solid #bbcbd3;padding:12px;text-align:left}summary{cursor:pointer}pre{white-space:pre-wrap;font-size:16px}a{color:#006b9a}@media print{section{break-inside:avoid}.meta{font-size:12px}}</style><main><h1>04 收衣服｜積木圖解</h1><p>先看流程，再對照原始事件；使用下方編號逐段講解。</p><div class="flow"><a class="pill" href="#s1">1 開始與擺放</a><a class="pill" href="#s2">2 抽出下一件</a><a class="pill" href="#s3">3 移動籃子</a><a class="pill" href="#s4">4 下落與接住</a><a class="pill" href="#s5">5 漏接與完成</a></div><section><h2>變數先看用途</h2><table><tr><th>變數</th><th>初始值</th><th>意思</th></tr><tr><td>running</td><td>假</td><td>遊戲與下落是否執行</td></tr><tr><td>dragging</td><td>假</td><td>手指是否正在操作籃子</td></tr><tr><td>count</td><td>0</td><td>接住數量，5件完成</td></tr><tr><td>slot</td><td>0</td><td>目前衣物位置0～4</td></tr><tr><td>used0～4</td><td>假</td><td>這件是否已選出下落，避免重複掛出</td></tr><tr><td>mask</td><td>0</td><td>以1、2、4、8、16累加，選擇對應衣架背景</td></tr><tr><td>kind</td><td>1</td><td>此版仍宣告但未使用；不作本堂核心</td></tr></table></section><section class="lesson" id="s1"><h2>04｜1. 開始與擺放</h2><p class="note">開始重設used與mask，LayoutClock配置籃子衣物並啟動FallClock。</p><p class="meta">實際來源：AI04_LaundryCatchV5.aia → Start.Click；區塊ID laundry3_329。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Start.Click 發生</div><div class="branch"><small>執行</small><div class="block procedure">呼叫 開始</div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Start&#x27;} {&#x27;component_type&#x27;: &#x27;Button&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Start&#x27;, &#x27;event_name&#x27;: &#x27;Click&#x27;}
+  procedures_callnoreturn {&#x27;PROCNAME&#x27;: &#x27;開始&#x27;} {&#x27;name&#x27;: &#x27;開始&#x27;}</pre></details></section><section class="lesson" id="s2"><h2>04｜2. 抽出下一件</h2><p class="note">隨機挑slot，再跳過已使用項；標記used，更新mask及衣架背景。此複雜程序先提供。</p><p class="meta">實際來源：AI04_LaundryCatchV5.aia → 程序 下一件；區塊ID laundry3_8。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block procedure">程序 下一件</div><div class="branch"><small>執行</small><div class="block set">設定 slot 為 隨機整數(0, 4)</div><div class="block ">如果 ((slot ＝ 0) 且 used0)</div><div class="branch"><small>執行</small><div class="block set">設定 slot 為 1</div></div><div class="block ">如果 ((slot ＝ 1) 且 used1)</div><div class="branch"><small>執行</small><div class="block set">設定 slot 為 2</div></div><div class="block ">如果 ((slot ＝ 2) 且 used2)</div><div class="branch"><small>執行</small><div class="block set">設定 slot 為 3</div></div><p class="meta">…後續積木見下方完整原始區段</p></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>procedures_defnoreturn {&#x27;NAME&#x27;: &#x27;下一件&#x27;} {}
+  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+    math_random_int {} {}
+      math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+      math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+    controls_if {} {}
+      logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+          math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used0&#x27;} {}
+      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+        math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+      controls_if {} {}
+        logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+          math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used1&#x27;} {}
+        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+          math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+        controls_if {} {}
+          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+            math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+              math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used2&#x27;} {}
+          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+            math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+          controls_if {} {}
+            logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+              math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used3&#x27;} {}
+            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+              math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+            controls_if {} {}
+              logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used4&#x27;} {}
+              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+              controls_if {} {}
+                logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                  math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used0&#x27;} {}
+                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                controls_if {} {}
+                  logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                    math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used1&#x27;} {}
+                  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                  controls_if {} {}
+                    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used2&#x27;} {}
+                    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                    controls_if {} {}
+                      logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used3&#x27;} {}
+                      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                        math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                      controls_if {} {}
+                        logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                          math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used4&#x27;} {}
+                        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                          math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                        controls_if {} {}
+                          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                            math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used0&#x27;} {}
+                          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                          controls_if {} {}
+                            logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                              math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used1&#x27;} {}
+                            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                              math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                            controls_if {} {}
+                              logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used2&#x27;} {}
+                              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                              controls_if {} {}
+                                logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                  math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                    math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used3&#x27;} {}
+                                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                  math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                controls_if {} {}
+                                  logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                    math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                      math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used4&#x27;} {}
+                                  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                    math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                  controls_if {} {}
+                                    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                        math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used0&#x27;} {}
+                                    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                      math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                    controls_if {} {}
+                                      logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                          math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used1&#x27;} {}
+                                      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                        math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                      controls_if {} {}
+                                        logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                          math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                            math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used2&#x27;} {}
+                                        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                          math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                        controls_if {} {}
+                                          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                            math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                              math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used3&#x27;} {}
+                                          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                            math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                          controls_if {} {}
+                                            logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                              math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used4&#x27;} {}
+                                            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                              math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                            controls_if {} {}
+                                              logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used0&#x27;} {}
+                                              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                              controls_if {} {}
+                                                logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                  math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used1&#x27;} {}
+                                                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                  math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                                controls_if {} {}
+                                                  logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                    math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used2&#x27;} {}
+                                                  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                    math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                  controls_if {} {}
+                                                    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                      math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used3&#x27;} {}
+                                                    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                      math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                                    controls_if {} {}
+                                                      logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+                                                        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                                        lexical_variable_get {&#x27;VAR&#x27;: &#x27;global used4&#x27;} {}
+                                                      lexical_variable_set {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                        math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                                      controls_if {} {}
+                                                        math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                          lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                          math_number {&#x27;NUM&#x27;: &#x27;0&#x27;} {}
+                                                        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global used0&#x27;} {}
+                                                          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                            math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                                                              text {&#x27;TEXT&#x27;: &#x27;cloth0.png&#x27;} {}
+                                                        controls_if {} {}
+                                                          math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+                                                          lexical_variable_set {&#x27;VAR&#x27;: &#x27;global used1&#x27;} {}
+                                                            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                                              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                                                                text {&#x27;TEXT&#x27;: &#x27;cloth1.png&#x27;} {}
+                                                          controls_if {} {}
+                                                            math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                              lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                              math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                                            lexical_variable_set {&#x27;VAR&#x27;: &#x27;global used2&#x27;} {}
+                                                              logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                                                                  text {&#x27;TEXT&#x27;: &#x27;cloth2.png&#x27;} {}
+                                                            controls_if {} {}
+                                                              math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                                math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+                                                              lexical_variable_set {&#x27;VAR&#x27;: &#x27;global used3&#x27;} {}
+                                                                logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                  math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                    math_number {&#x27;NUM&#x27;: &#x27;8&#x27;} {}
+                                                                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                                                                    text {&#x27;TEXT&#x27;: &#x27;cloth3.png&#x27;} {}
+                                                              controls_if {} {}
+                                                                math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                                                                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                                  math_number {&#x27;NUM&#x27;: &#x27;4&#x27;} {}
+                                                                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global used4&#x27;} {}
+                                                                  logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                                                                  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;16&#x27;} {}
+                                                                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Picture&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Picture&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                                                                      text {&#x27;TEXT&#x27;: &#x27;cloth4.png&#x27;} {}
+                                                                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;BackgroundImage&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;BackgroundImage&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                                                                  text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                    text {&#x27;TEXT&#x27;: &#x27;hang&#x27;} {}
+                                                                    text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global mask&#x27;} {}
+                                                                      text {&#x27;TEXT&#x27;: &#x27;.png&#x27;} {}
+                                                                  component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                                                                    math_subtract {} {}
+                                                                      math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                                                                        math_division {} {}
+                                                                          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                                                                            math_number {&#x27;NUM&#x27;: &#x27;0.5&#x27;} {}
+                                                                          math_number {&#x27;NUM&#x27;: &#x27;5&#x27;} {}
+                                                                      math_division {} {}
+                                                                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                                                                        math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+                                                                    math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                                                                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                                                                      math_number {&#x27;NUM&#x27;: &#x27;0.108&#x27;} {}</pre></details></section><section class="lesson" id="s3"><h2>04｜3. 移動籃子</h2><p class="note">Basket.TouchDown令dragging為真；Board.Dragged在running且dragging時更新X、Y；放開設假。</p><p class="meta">實際來源：AI04_LaundryCatchV5.aia → Board.Dragged；區塊ID laundry3_411。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Board.Dragged 發生</div><div class="branch"><small>執行</small><div class="block ">如果 (running 且 dragging)</div><div class="branch"><small>執行</small><div class="block component">設定 Basket.X 為 (Basket.X + (currentX − prevX))</div><div class="block component">設定 Basket.Y 為 (Basket.Y + (currentY − prevY))</div><div class="block component">呼叫 Basket.MoveIntoBounds（）</div></div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;, &#x27;event_name&#x27;: &#x27;Dragged&#x27;}
+  controls_if {} {}
+    logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global dragging&#x27;} {}
+    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+        math_subtract {} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentX&#x27;} {}
+          lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevX&#x27;} {}
+      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+        math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+          math_subtract {} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;currentY&#x27;} {}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;prevY&#x27;} {}
+        component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveIntoBounds&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}</pre></details></section><section class="lesson" id="s4"><h2>04｜4. 下落與接住</h2><p class="note">FallClock每次將衣物Y增加Board.Height×0.018，再判斷是否進入籃子；接到加1。</p><p class="meta">實際來源：AI04_LaundryCatchV5.aia → FallClock.Timer；區塊ID laundry3_429。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 FallClock.Timer 發生</div><div class="branch"><small>執行</small><div class="block ">如果 running</div><div class="branch"><small>執行</small><div class="block component">設定 Cloth.Y 為 (Cloth.Y + (Board.Height × 0.018))</div><div class="block ">如果 ((((Cloth.X + (Cloth.Width ÷ 2)) ≥ Basket.X) 且 ((Cloth.X + (Cloth.Width ÷ 2)) ≤ (Basket.X + Basket.Width))) 且 (((Cloth.Y + Cloth.Height) ≥ Basket.Y) 且 (Cloth.Y ≤ (Basket.Y + (Basket.Height ÷ 3)))))</div><div class="branch"><small>執行</small><div class="block set">設定 count 為 (count + 1)</div><div class="block component">設定 Progress.Text 為 合併文字：已收好  ＋ 合併文字：count ＋  / 5</div><div class="block component">設定 Feedback.Text 為 接到了！</div><div class="block ">如果 (count ＝ 5)</div><div class="branch"><small>執行</small><div class="block set">設定 running 為 假</div><div class="block component">設定 FallClock.TimerEnabled 為 假</div><div class="block component">設定 StartPanel.Visible 為 假</div><div class="block component">設定 GamePanel.Visible 為 假</div><p class="meta">…後續積木見下方完整原始區段</p></div><div class="branch"><small>否則</small><div class="block procedure">呼叫 下一件</div></div></div><div class="branch"><small>否則</small><div class="block ">如果 (Cloth.Y ＞ Board.Height)</div><div class="branch"><small>執行</small><div class="block component">設定 Feedback.Text 為 沒關係，同一件再接一次</div><div class="block component">呼叫 Cloth.MoveTo（((Board.Width × ((slot + 0.5) ÷ 5)) − (Cloth.Width ÷ 2)), (Board.Height × 0.108)）</div></div></div></div></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;FallClock&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;FallClock&#x27;, &#x27;event_name&#x27;: &#x27;Timer&#x27;}
+  controls_if {} {}
+    lexical_variable_get {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+      math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+        math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+          math_number {&#x27;NUM&#x27;: &#x27;0.018&#x27;} {}
+      controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+        logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+            math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                math_division {} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+            math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                math_division {} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;X&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;X&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+          logic_operation {&#x27;OP&#x27;: &#x27;AND&#x27;} {}
+            math_compare {&#x27;OP&#x27;: &#x27;GTE&#x27;} {}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+            math_compare {&#x27;OP&#x27;: &#x27;LTE&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+              math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+                math_division {} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Basket&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Basket&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;3&#x27;} {}
+        lexical_variable_set {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+          math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+            lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+            math_number {&#x27;NUM&#x27;: &#x27;1&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Progress&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Progress&#x27;}
+            text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+              text {&#x27;TEXT&#x27;: &#x27;已收好 &#x27;} {}
+              text_join {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                text {&#x27;TEXT&#x27;: &#x27; / 5&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+              text {&#x27;TEXT&#x27;: &#x27;接到了！&#x27;} {}
+              controls_if {} {&#x27;else&#x27;: &#x27;1&#x27;}
+                math_compare {&#x27;OP&#x27;: &#x27;EQ&#x27;} {}
+                  lexical_variable_get {&#x27;VAR&#x27;: &#x27;global count&#x27;} {}
+                  math_number {&#x27;NUM&#x27;: &#x27;5&#x27;} {}
+                lexical_variable_set {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+                  logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;FallClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;FallClock&#x27;}
+                    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                    component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+                      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+                        logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+                        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                          logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+                          component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Voice&#x27;} {&#x27;component_type&#x27;: &#x27;TextToSpeech&#x27;, &#x27;method_name&#x27;: &#x27;Speak&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Voice&#x27;}
+                            text {&#x27;TEXT&#x27;: &#x27;完成了！今天的衣服收好了。&#x27;} {}
+                procedures_callnoreturn {&#x27;PROCNAME&#x27;: &#x27;下一件&#x27;} {&#x27;name&#x27;: &#x27;下一件&#x27;}
+        controls_if {} {}
+          math_compare {&#x27;OP&#x27;: &#x27;GT&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Y&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Y&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Feedback&#x27;, &#x27;PROP&#x27;: &#x27;Text&#x27;} {&#x27;component_type&#x27;: &#x27;Label&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Text&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Feedback&#x27;}
+            text {&#x27;TEXT&#x27;: &#x27;沒關係，同一件再接一次&#x27;} {}
+            component_method {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;method_name&#x27;: &#x27;MoveTo&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+              math_subtract {} {}
+                math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                  math_division {} {}
+                    math_add {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                      lexical_variable_get {&#x27;VAR&#x27;: &#x27;global slot&#x27;} {}
+                      math_number {&#x27;NUM&#x27;: &#x27;0.5&#x27;} {}
+                    math_number {&#x27;NUM&#x27;: &#x27;5&#x27;} {}
+                math_division {} {}
+                  component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Cloth&#x27;, &#x27;PROP&#x27;: &#x27;Width&#x27;} {&#x27;component_type&#x27;: &#x27;ImageSprite&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Width&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Cloth&#x27;}
+                  math_number {&#x27;NUM&#x27;: &#x27;2&#x27;} {}
+              math_multiply {} {&#x27;items&#x27;: &#x27;2&#x27;}
+                component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Board&#x27;, &#x27;PROP&#x27;: &#x27;Height&#x27;} {&#x27;component_type&#x27;: &#x27;Canvas&#x27;, &#x27;set_or_get&#x27;: &#x27;get&#x27;, &#x27;property_name&#x27;: &#x27;Height&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Board&#x27;}
+                math_number {&#x27;NUM&#x27;: &#x27;0.108&#x27;} {}</pre></details></section><section class="lesson" id="s5"><h2>04｜5. 漏接與完成</h2><p class="note">漏接把同一衣物移回上方，不重新抽；接滿5件停止時計並顯示成果；Home停止計時並回首頁。</p><p class="meta">實際來源：AI04_LaundryCatchV5.aia → Home.Click；區塊ID laundry3_385。以下為原始積木資料的教學重排，非App Inventor截圖；省略處有標示。</p><div class="stack"><div class="block ">當 Home.Click 發生</div><div class="branch"><small>執行</small><div class="block set">設定 running 為 假</div><div class="block set">設定 dragging 為 假</div><div class="block component">設定 FallClock.TimerEnabled 為 假</div><div class="block component">設定 LayoutClock.TimerEnabled 為 假</div><p class="meta">…後續積木見下方完整原始區段</p></div></div><details><summary>完整原始區段資料（教師核對）</summary><pre>component_event {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;Home&#x27;} {&#x27;component_type&#x27;: &#x27;Button&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;Home&#x27;, &#x27;event_name&#x27;: &#x27;Click&#x27;}
+  lexical_variable_set {&#x27;VAR&#x27;: &#x27;global running&#x27;} {}
+    logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+    lexical_variable_set {&#x27;VAR&#x27;: &#x27;global dragging&#x27;} {}
+      logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+      component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;FallClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;FallClock&#x27;}
+        logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+        component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;LayoutClock&#x27;, &#x27;PROP&#x27;: &#x27;TimerEnabled&#x27;} {&#x27;component_type&#x27;: &#x27;Clock&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;TimerEnabled&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;LayoutClock&#x27;}
+          logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+          component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;StartPanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;StartPanel&#x27;}
+            logic_boolean {&#x27;BOOL&#x27;: &#x27;TRUE&#x27;} {}
+            component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;GamePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;GamePanel&#x27;}
+              logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}
+              component_set_get {&#x27;COMPONENT_SELECTOR&#x27;: &#x27;DonePanel&#x27;, &#x27;PROP&#x27;: &#x27;Visible&#x27;} {&#x27;component_type&#x27;: &#x27;VerticalArrangement&#x27;, &#x27;set_or_get&#x27;: &#x27;set&#x27;, &#x27;property_name&#x27;: &#x27;Visible&#x27;, &#x27;is_generic&#x27;: &#x27;false&#x27;, &#x27;instance_name&#x27;: &#x27;DonePanel&#x27;}
+                logic_boolean {&#x27;BOOL&#x27;: &#x27;FALSE&#x27;} {}</pre></details></section><section><h2>學生要補什麼？</h2><p>③ 補Board.Dragged：running且dragging時更新Basket.X與Y，並MoveIntoBounds。<br>③ 補Board.TouchUp：dragging設假。</p><p>必改：調整FallClock下落係數0.018，比較較慢與較快版本；每次只改一個參數。</p><p>進階新增：在接到衣服的分支加入簡短語音回饋；觀察是否過度頻繁，再決定保留方式。</p><h3>驗收</h3><ul><li>開始後才下落</li><li>按住籃子可上下左右移動</li><li>衣物掉下時衣架少一件</li><li>漏接重來的是同一件</li><li>五件不重複且完成後停止</li><li>重玩重新掛滿五件</li></ul></section><p class="meta">依原始.aia內容製作。未完成手機測試。教師完成版與學生半成品分開使用。</p></main></html>
